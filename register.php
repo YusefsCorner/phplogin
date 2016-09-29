@@ -1,23 +1,24 @@
 <?php
 
-$server = 'localhost';
-$username = 'root';
-$password = 'root';
-$database = 'logins';
+require 'connect.php';
 
-try{
-	$conn = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
-} catch(PDOException $e){
-	die("Connection Failed: ". $e->getMessage());
-}	
+//establishing the connection to the database
+	
+	if(!empty($_POST['email']) && !empty($_POST['password'])):
 
-
-	if(!empty($_POST['email']) && !empty($_POST['password']));
-
+	$sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
+	$stmt = $conn->prepare($sql);
+	
+	$stmt->bindParam(':email', $_POST['email']);
+	$stmt->bindParam(':password',password_hash($_POST['password'], PASSWORD_BCRYPT));
+	
+	if( $stmt->execute() ):
+		die ('Success');
+	else:
+		die ('Failed');
+	endif;
 	//Enter the new user into the database
-
-
-
+endif;
 
 ?>
 
