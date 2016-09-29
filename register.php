@@ -2,6 +2,8 @@
 
 require 'connect.php';
 
+$message = '';
+
 //establishing the connection to the database
 	
 	if(!empty($_POST['email']) && !empty($_POST['password'])):
@@ -13,9 +15,10 @@ require 'connect.php';
 	$stmt->bindParam(':password',password_hash($_POST['password'], PASSWORD_BCRYPT));
 	
 	if( $stmt->execute() ):
-		die ('Success');
+		$message = 'Successfully created new user';
+		
 	else:
-		die ('Failed');
+		$message = 'Sorry issue with creating user';
 	endif;
 	//Enter the new user into the database
 endif;
@@ -34,9 +37,14 @@ endif;
 
 <body>
 
+<?php if(!empty($message)): ?>
+	<p><?=$message ?></p>
+    <?php endif; ?>
+
+
 <h1>Register</h1>
 
-<form action="login.php" method="post">
+<form action="register.php" method="post">
         	<input type="text" name="email" placeholder="Enter your email"><br>
         	<input type="password" name="password" placeholder="Enter password"><br>
             <input type="password" name="confirm_password" placeholder="Confirm password"><br>
