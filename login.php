@@ -1,3 +1,12 @@
+<?php
+if(!empty($_POST['email']) && !empty($_POST['password']));
+
+
+
+?>
+
+
+
 <!doctype html>
 <html>
 <head>
