@@ -1,26 +1,36 @@
 <?php
 
+session_start();
+
+if( isset($_SESSION['user_id']) ){
+	header("Location: /");
+}
+
 require 'connect.php';
 
 $message = '';
 
-//establishing the connection to the database
+if(!empty($_POST['email']) && !empty($_POST['password'])):
+	$email =$_POST['email'];
+	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+  		echo "Invalid email format"; 
+	}		 
+	else {	
 	
-	if(!empty($_POST['email']) && !empty($_POST['password'])):
-
+	// Enter the new user in the database
 	$sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
 	$stmt = $conn->prepare($sql);
-	
-	$stmt->bindParam(':email', $_POST['email']);
-	$stmt->bindParam(':password',password_hash($_POST['password'], PASSWORD_BCRYPT));
-	
+    $password=password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+	$stmt->bindParam(':email', $email);
+	$stmt->bindParam(':password', $password);
+
 	if( $stmt->execute() ):
 		$message = 'Successfully created new user';
-		
 	else:
-		$message = 'Sorry issue with creating user';
+		$message = 'Sorry there must have been an issue creating your account';
 	endif;
-	//Enter the new user into the database
+	}
 endif;
 
 ?>
